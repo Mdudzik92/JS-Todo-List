@@ -27,6 +27,14 @@ function renderTodos() {
 
 		var li = document.createElement("li");
 		li.textContent = todo;
+		// Setting the data index for each li
+		li.setAttribute("data-index", i);
+
+		// Adding a complete button for each added todo and appending it to the list.
+		var button = document.createElement("button");
+		button.textContent = "Complete";
+
+		li.appendChild(button);
 		todoList.appendChild(li);
 	}
 }
@@ -50,4 +58,19 @@ todoForm.addEventListener("submit", function (event) {
 
 	// Re-rendering the list
 	renderTodos();
+});
+
+// Adding an event listener so that when a user clicks the Complete button, it accesses the `data-index` value and removes that todo element from the list.
+todoList.addEventListener("click", function (event) {
+	var element = event.target;
+
+	// If the clicked element is a button...
+	if (element.matches("button") === true) {
+		// Get its data-index value and remove the todo element from the list
+		var index = element.parentElement.getAttribute("data-index");
+		todos.splice(index, 1);
+
+		// Re-render the list
+		renderTodos();
+	}
 });
