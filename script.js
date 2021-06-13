@@ -3,14 +3,9 @@ var todoForm = document.querySelector("#todo-form");
 var todoList = document.querySelector("#todo-list");
 var todoCountSpan = document.querySelector("#todo-count");
 
-var todos = [
-	"Pick up kids from school",
-	"Stop at post office",
-	"Go grocery shopping",
-	"Code more JavaScript",
-];
+var todos = [];
 
-renderTodos();
+init();
 
 // Creating a function that will render the todos into a list in the browser.
 function renderTodos() {
@@ -39,6 +34,24 @@ function renderTodos() {
 	}
 }
 
+function init() {
+	// Getting stored todos from localStorage and parsing the JSON string to an object
+	var storedTodos = JSON.parse(localStorage.getItem("todos"));
+
+	// If todos were retrieved from localStorage, update the todos array to it
+	if (storedTodos !== null) {
+		todos = storedTodos;
+	}
+
+	// Then render todos to the DOM
+	renderTodos();
+}
+
+function storeTodos() {
+	// Stringifying and setting "todos" key in localStorage to todos array
+	localStorage.setItem("todos", JSON.stringify(todos));
+}
+
 // Adding an event listener so that when a user hits enter, the value from the todo input field is pushed to our todo array.
 todoForm.addEventListener("submit", function (event) {
 	event.preventDefault();
@@ -56,7 +69,8 @@ todoForm.addEventListener("submit", function (event) {
 	// Clearing the input afterwards
 	todoInput.value = "";
 
-	// Re-rendering the list
+	// Storing updated todos in localStorage, then re-rendering the list
+	storeTodos();
 	renderTodos();
 });
 
@@ -70,7 +84,8 @@ todoList.addEventListener("click", function (event) {
 		var index = element.parentElement.getAttribute("data-index");
 		todos.splice(index, 1);
 
-		// Re-render the list
+		// Storing updated todos in localStorage, then re-rendering the list
+		storeTodos();
 		renderTodos();
 	}
 });
